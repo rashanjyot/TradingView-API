@@ -176,6 +176,41 @@ module.exports = {
     });
   },
 
+    /**
+     * Returns a user's watchlist wherein each watchlist object is as below
+     *  {
+     *     id: 175444168,
+     *     type: 'custom',
+     *     name: '_D3 - 09-01-2025 Watchlist',
+     *     symbols: [ 'NSE:CONCORDBIO' ],
+     *     active: false,
+     *     shared: false,
+     *     color: null,
+     *     description: null,
+     *     created: '2025-01-09T00:42:26.779635Z',
+     *     modified: '2025-01-09T00:42:35.871748Z'
+     *   },
+     * @param name
+     * @param session
+     * @param signature
+     * @returns {Promise<any>}
+     */
+    async getWatchlist(name= '', session = '', signature = '') {
+        const request = await axios.get(
+            'https://www.tradingview.com/api/v1/symbols_list/custom',
+            {
+                headers: {
+                    origin: 'https://www.tradingview.com',
+                    cookie: genAuthCookies(session, signature),
+                },
+                validateStatus,
+            },
+        );
+
+        const { data } = request;
+        return data.find( (wl) => wl.name === name );
+    },
+
   /**
    * @typedef {Object} SearchIndicatorResult
    * @prop {string} id Script ID
